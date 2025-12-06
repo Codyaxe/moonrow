@@ -48,4 +48,8 @@ router.get("/loans/edit/:id", LoanController.editLoanPage);
 router.post("/loans/edit/:id", LoanController.updateLoan);
 router.post("/loans/delete/:id", LoanController.deleteLoan);
 
+router.use((_, res) => {
+  res.status(404).render("404", { hideIntro: true });
+});
+
 module.exports = router;
