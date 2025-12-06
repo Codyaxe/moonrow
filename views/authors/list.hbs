@@ -1,0 +1,67 @@
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fa fa-user"></i> Authors</h2>
+                <a href="/authors/create" class="btn btn-primary">
+                    <i class="fa fa-plus"></i> Add New Author
+                </a>
+            </div>
+
+            {{#if messages.success}}
+                <div class="alert alert-success alert-dismissible fade show">
+                    {{messages.success}}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {{/if}}
+            {{#if messages.error}}
+                <div class="alert alert-danger alert-dismissible fade show">
+                    {{messages.error}}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {{/if}}
+
+            <div class="card">
+                <div class="card-body">
+                    {{#if authors.length}}
+                        <table class="table table-striped table-hover" style="table-layout: fixed; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each authors}}
+                                <tr>
+                                    <td>{{this.AuthorID}}</td>
+                                    <td>{{this.FirstName}}</td>
+                                    <td>{{this.LastName}}</td>
+                                    <td>
+                                        <a href="/authors/edit/{{this.AuthorID}}" class="btn btn-sm btn-warning">
+                                            <i class="fa fa-edit"></i> Edit
+                                        </a>
+                                        <form action="/authors/delete/{{this.AuthorID}}" method="POST" style="display: inline;" 
+                                              onsubmit="return confirm('Delete this author?');">
+                                            <input type="hidden" name="_csrf" value="{{../csrfToken}}">
+                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                <i class="fa fa-trash"></i> Delete
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    {{else}}
+                        <div class="alert alert-info text-center">
+                            No authors found. <a href="/authors/create">Add your first author</a>
+                        </div>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,54 @@
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h3>New Loan</h3>
+                </div>
+                <div class="card-body">
+                    {{#if messages.error}}
+                        <div class="alert alert-danger">{{messages.error}}</div>
+                    {{/if}}
+
+                    <form action="/loans/create" method="POST">
+                        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                        
+                        <div class="form-group">
+                            <label for="BookID">Book *</label>
+                            <select class="form-control" id="BookID" name="BookID" required>
+                                <option value="">-- Select Book --</option>
+                                {{#each books}}
+                                    <option value="{{this.BookID}}">{{this.Title}} ({{this.CopiesAvailable}} available)</option>
+                                {{/each}}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="BorrowerID">Borrower *</label>
+                            <select class="form-control" id="BorrowerID" name="BorrowerID" required>
+                                <option value="">-- Select Borrower --</option>
+                                {{#each borrowers}}
+                                    <option value="{{this.BorrowerID}}">{{this.FirstName}} {{this.LastName}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="BorrowDate">Borrow Date</label>
+                            <input type="date" class="form-control" id="BorrowDate" name="BorrowDate" value="{{today}}">
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-save"></i> Create Loan
+                            </button>
+                            <a href="/loans" class="btn btn-secondary">
+                                <i class="fa fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

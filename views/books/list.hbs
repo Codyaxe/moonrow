@@ -1,0 +1,73 @@
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fa fa-book"></i> Books</h2>
+                <a href="/books/create" class="btn btn-primary">
+                    <i class="fa fa-plus"></i> Add New Book
+                </a>
+            </div>
+
+            {{#if messages.success}}
+                <div class="alert alert-success alert-dismissible fade show">
+                    {{messages.success}}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {{/if}}
+            {{#if messages.error}}
+                <div class="alert alert-danger alert-dismissible fade show">
+                    {{messages.error}}
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+            {{/if}}
+
+            <div class="card">
+                <div class="card-body">
+                    {{#if books.length}}
+                        <table class="table table-striped table-hover" style="table-layout: fixed; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Title</th>
+                                    <th>Author</th>
+                                    <th>Genre</th>
+                                    <th>Year</th>
+                                    <th>Copies</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each books}}
+                                <tr>
+                                    <td>{{this.BookID}}</td>
+                                    <td>{{this.Title}}</td>
+                                    <td>{{#if this.author}}{{this.author.FirstName}} {{this.author.LastName}}{{else}}-{{/if}}</td>
+                                    <td>{{this.Genre}}</td>
+                                    <td>{{this.PublishedYear}}</td>
+                                    <td>{{this.CopiesAvailable}}</td>
+                                    <td>
+                                        <a href="/books/edit/{{this.BookID}}" class="btn btn-sm btn-warning">
+                                            <i class="fa fa-edit"></i> Edit
+                                        </a>
+                                        <form action="/books/delete/{{this.BookID}}" method="POST" style="display: inline;" 
+                                              onsubmit="return confirm('Delete this book?');">
+                                            <input type="hidden" name="_csrf" value="{{../csrfToken}}">
+                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                <i class="fa fa-trash"></i> Delete
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    {{else}}
+                        <div class="alert alert-info text-center">
+                            No books found. <a href="/books/create">Add your first book</a>
+                        </div>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

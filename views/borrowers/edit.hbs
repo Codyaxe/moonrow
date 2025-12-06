@@ -1,0 +1,51 @@
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Edit Borrower</h3>
+                </div>
+                <div class="card-body">
+                    {{#if messages.error}}
+                        <div class="alert alert-danger">{{messages.error}}</div>
+                    {{/if}}
+
+                    <form action="/borrowers/edit/{{borrower.BorrowerID}}" method="POST">
+                        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                        
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="FirstName">First Name *</label>
+                                <input type="text" class="form-control" id="FirstName" name="FirstName" value="{{borrower.FirstName}}" required>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="LastName">Last Name *</label>
+                                <input type="text" class="form-control" id="LastName" name="LastName" value="{{borrower.LastName}}" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Email">Email</label>
+                            <input type="email" class="form-control" id="Email" name="Email" value="{{borrower.Email}}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Phone">Phone</label>
+                            <input type="text" class="form-control" id="Phone" name="Phone" value="{{borrower.Phone}}">
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-save"></i> Update Borrower
+                            </button>
+                            <a href="/borrowers" class="btn btn-secondary">
+                                <i class="fa fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
