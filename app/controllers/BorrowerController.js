@@ -35,11 +35,15 @@ exports.createBorrower = async (req, res) => {
     const { FirstName, LastName, Email, Phone } = req.body;
     await Borrower.create({ FirstName, LastName, Email, Phone });
     req.flash("success", "Borrower created successfully!");
-    res.redirect("/borrowers");
+    req.session.save(() => {
+      res.redirect("/borrowers");
+    });
   } catch (err) {
     console.log(err);
     req.flash("error", "Error creating borrower");
-    res.redirect("/borrowers/create");
+    req.session.save(() => {
+      res.redirect("/borrowers/create");
+    });
   }
 };
 
@@ -70,15 +74,21 @@ exports.updateBorrower = async (req, res) => {
     const borrower = await Borrower.findByPk(req.params.id);
     if (!borrower) {
       req.flash("error", "Borrower not found");
-      return res.redirect("/borrowers");
+      return req.session.save(() => {
+        res.redirect("/borrowers");
+      });
     }
     await borrower.update({ FirstName, LastName, Email, Phone });
     req.flash("success", "Borrower updated successfully!");
-    res.redirect("/borrowers");
+    req.session.save(() => {
+      res.redirect("/borrowers");
+    });
   } catch (err) {
     console.log(err);
     req.flash("error", "Error updating borrower");
-    res.redirect("/borrowers");
+    req.session.save(() => {
+      res.redirect("/borrowers");
+    });
   }
 };
 
@@ -88,14 +98,20 @@ exports.deleteBorrower = async (req, res) => {
     const borrower = await Borrower.findByPk(req.params.id);
     if (!borrower) {
       req.flash("error", "Borrower not found");
-      return res.redirect("/borrowers");
+      return req.session.save(() => {
+        res.redirect("/borrowers");
+      });
     }
     await borrower.destroy();
     req.flash("success", "Borrower deleted successfully!");
-    res.redirect("/borrowers");
+    req.session.save(() => {
+      res.redirect("/borrowers");
+    });
   } catch (err) {
     console.log(err);
     req.flash("error", "Error deleting borrower");
-    res.redirect("/borrowers");
+    req.session.save(() => {
+      res.redirect("/borrowers");
+    });
   }
 };

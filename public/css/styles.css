@@ -109,3 +109,7 @@ body {
 .custom-font {
   font-family: "Fira Code", monospace;
 }
+
+.disable-border {
+  border-width: 0;
+}

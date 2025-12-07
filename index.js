@@ -26,13 +26,13 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(
   session({
     resave: true,
-    saveUninitialized: true,
+    saveUninitialized: false,
     secret: process.env.SESSION_SECRET,
-    cookie: { path: "/", httpOnly: true, maxAge: 1209600000 }, // maxAge two weeks in milliseconds, remove secure: true for local development
     store: new SequelizeStore({
       db: sequelize,
       table: "sessions",
     }),
+    cookie: { path: "/", httpOnly: true, maxAge: 1209600000 }, // maxAge two weeks in milliseconds, remove secure: true for local development
   })
 );
 

@@ -71,11 +71,15 @@ exports.createLoan = async (req, res) => {
     });
 
     req.flash("success", "Loan created successfully!");
-    res.redirect("/loans");
+    req.session.save(() => {
+      res.redirect("/loans");
+    });
   } catch (err) {
     console.log(err);
     req.flash("error", "Error creating loan");
-    res.redirect("/loans/create");
+    req.session.save(() => {
+      res.redirect("/loans/create");
+    });
   }
 };
 
@@ -113,7 +117,9 @@ exports.updateLoan = async (req, res) => {
 
     if (!loan) {
       req.flash("error", "Loan not found");
-      return res.redirect("/loans");
+      return req.session.save(() => {
+        res.redirect("/loans");
+      });
     }
 
     // If status changed to 'Returned', increase book copies
@@ -133,11 +139,15 @@ exports.updateLoan = async (req, res) => {
     });
 
     req.flash("success", "Loan updated successfully!");
-    res.redirect("/loans");
+    req.session.save(() => {
+      res.redirect("/loans");
+    });
   } catch (err) {
     console.log(err);
     req.flash("error", "Error updating loan");
-    res.redirect("/loans");
+    req.session.save(() => {
+      res.redirect("/loans");
+    });
   }
 };
 
@@ -148,7 +158,9 @@ exports.deleteLoan = async (req, res) => {
 
     if (!loan) {
       req.flash("error", "Loan not found");
-      return res.redirect("/loans");
+      return req.session.save(() => {
+        res.redirect("/loans");
+      });
     }
 
     // If loan was borrowed, increase book copies
@@ -161,10 +173,14 @@ exports.deleteLoan = async (req, res) => {
 
     await loan.destroy();
     req.flash("success", "Loan deleted successfully!");
-    res.redirect("/loans");
+    req.session.save(() => {
+      res.redirect("/loans");
+    });
   } catch (err) {
     console.log(err);
     req.flash("error", "Error deleting loan");
-    res.redirect("/loans");
+    req.session.save(() => {
+      res.redirect("/loans");
+    });
   }
 };
