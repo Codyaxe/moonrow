@@ -25,6 +25,10 @@ body {
   z-index: 3;
 }
 
+.form-signin input[type="email"]:focus ~ label {
+  z-index: 4;
+}
+
 .form-signin input[type="password"] {
   margin-bottom: 10px;
   border-top-left-radius: 0;
