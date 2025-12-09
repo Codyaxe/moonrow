@@ -24,43 +24,276 @@
             <div class="card">
                 <div class="card-body">
                     {{#if books.length}}
-                        <table class="table table-striped table-hover" style="table-layout: fixed; width: 100%;">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Title</th>
-                                    <th>Author</th>
-                                    <th>Genre</th>
-                                    <th>Year</th>
-                                    <th>Copies</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{#each books}}
-                                <tr>
-                                    <td>{{this.BookID}}</td>
-                                    <td>{{this.Title}}</td>
-                                    <td>{{#if this.author}}{{this.author.FirstName}} {{this.author.LastName}}{{else}}-{{/if}}</td>
-                                    <td>{{this.Genre}}</td>
-                                    <td>{{this.PublishedYear}}</td>
-                                    <td>{{this.CopiesAvailable}}</td>
-                                    <td>
-                                        <a href="/books/edit/{{this.BookID}}" class="btn btn-sm btn-warning">
-                                            <i class="fa fa-edit"></i> Edit
-                                        </a>
-                                        <form action="/books/delete/{{this.BookID}}" method="POST" style="display: inline;" 
-                                              onsubmit="return confirm('Delete this book?');">
-                                            <input type="hidden" name="_csrf" value="{{../csrfToken}}">
-                                            <button type="submit" class="btn btn-sm btn-danger">
-                                                <i class="fa fa-trash"></i> Delete
+                        <!-- Search and Filter Controls -->
+                        <div class="row mb-3">
+                            <div class="col-md-5">
+                                <input type="text" id="searchBooks" class="form-control" placeholder="Search books...">
+                            </div>
+                            <div class="col-md-2">
+                                <select id="filterGenre" class="form-select">
+                                    <option value="">All Genres</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select id="sortBooks" class="form-select">
+                                    <option value="">Sort by...</option>
+                                    <option value="id-asc">ID (Ascending)</option>
+                                    <option value="id-desc">ID (Descending)</option>
+                                    <option value="title-asc">Title (A-Z)</option>
+                                    <option value="title-desc">Title (Z-A)</option>
+                                    <option value="year-asc">Year (Oldest)</option>
+                                    <option value="year-desc">Year (Newest)</option>
+                                    <option value="copies-asc">Copies (Low to High)</option>
+                                    <option value="copies-desc">Copies (High to Low)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select id="entriesPerPage" class="form-select">
+                                    <option value="10">10 per page</option>
+                                    <option value="25">25 per page</option>
+                                    <option value="50">50 per page</option>
+                                    <option value="100">100 per page</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover" id="booksTable">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 8%;">ID</th>
+                                        <th style="width: 22%;">Title</th>
+                                        <th style="width: 15%;">Author</th>
+                                        <th style="width: 12%;">Genre</th>
+                                        <th style="width: 8%;">Year</th>
+                                        <th style="width: 10%;">Copies</th>
+                                        <th style="width: 25%;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each books}}
+                                    <tr data-id="{{this.BookID}}" 
+                                        data-title="{{this.Title}}" 
+                                        data-author="{{#if this.author}}{{this.author.FirstName}} {{this.author.LastName}}{{else}}-{{/if}}"
+                                        data-genre="{{this.Genre}}"
+                                        data-year="{{this.PublishedYear}}"
+                                        data-copies="{{this.CopiesAvailable}}">
+                                        <td>{{this.BookID}}</td>
+                                        <td>{{this.Title}}</td>
+                                        <td>{{#if this.author}}{{this.author.FirstName}} {{this.author.LastName}}{{else}}-{{/if}}</td>
+                                        <td>{{this.Genre}}</td>
+                                        <td>{{this.PublishedYear}}</td>
+                                        <td>{{this.CopiesAvailable}}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-secondary modify-btn" onclick="toggleActions(this)">
+                                                <i class="fa fa-pencil"></i> Modify
                                             </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                {{/each}}
-                            </tbody>
-                        </table>
+                                            <span class="action-buttons" style="display: none;">
+                                                <a href="/books/edit/{{this.BookID}}" class="btn btn-sm btn-warning">
+                                                    <i class="fa fa-edit"></i> Edit
+                                                </a>
+                                                <form action="/books/delete/{{this.BookID}}" method="POST" style="display: inline;" 
+                                                      onsubmit="return confirm('Delete this book?');">
+                                                    <input type="hidden" name="_csrf" value="{{../csrfToken}}">
+                                                    <button type="submit" class="btn btn-sm btn-danger">
+                                                        <i class="fa fa-trash"></i> Delete
+                                                    </button>
+                                                </form>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination Controls -->
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div id="tableInfo" class="text-muted"></div>
+                            <nav>
+                                <ul class="pagination mb-0" id="pagination"></ul>
+                            </nav>
+                        </div>
+
+                        <script>
+                            function toggleActions(btn) {
+                                const row = btn.closest('tr');
+                                const actionButtons = row.querySelector('.action-buttons');
+                                const modifyBtn = row.querySelector('.modify-btn');
+                                
+                                document.querySelectorAll('.action-buttons').forEach(ab => {
+                                    if (ab !== actionButtons) ab.style.display = 'none';
+                                });
+                                document.querySelectorAll('.modify-btn').forEach(mb => {
+                                    if (mb !== modifyBtn) mb.style.display = 'inline-block';
+                                });
+                                
+                                if (actionButtons.style.display === 'none') {
+                                    actionButtons.style.display = 'inline';
+                                    modifyBtn.style.display = 'none';
+                                } else {
+                                    actionButtons.style.display = 'none';
+                                    modifyBtn.style.display = 'inline-block';
+                                }
+                            }
+
+                            let currentPage = 1;
+                            let entriesPerPage = 10;
+                            let filteredRows = [];
+
+                            function initTable() {
+                                const table = document.getElementById('booksTable');
+                                const rows = Array.from(table.querySelectorAll('tbody tr'));
+                                filteredRows = rows;
+                                
+                                // Populate genre filter
+                                const genres = new Set();
+                                rows.forEach(row => {
+                                    const genre = row.dataset.genre;
+                                    if (genre) genres.add(genre);
+                                });
+                                
+                                const genreFilter = document.getElementById('filterGenre');
+                                genres.forEach(genre => {
+                                    const option = document.createElement('option');
+                                    option.value = genre;
+                                    option.textContent = genre;
+                                    genreFilter.appendChild(option);
+                                });
+                                
+                                renderTable();
+                            }
+
+                            function renderTable() {
+                                const table = document.getElementById('booksTable');
+                                const tbody = table.querySelector('tbody');
+                                const rows = Array.from(tbody.querySelectorAll('tr'));
+                                
+                                rows.forEach(row => row.style.display = 'none');
+                                
+                                const totalEntries = filteredRows.length;
+                                const totalPages = Math.ceil(totalEntries / entriesPerPage);
+                                const start = (currentPage - 1) * entriesPerPage;
+                                const end = start + entriesPerPage;
+                                
+                                filteredRows.slice(start, end).forEach(row => row.style.display = '');
+                                
+                                const showing = filteredRows.length === 0 ? 0 : start + 1;
+                                const to = Math.min(end, totalEntries);
+                                document.getElementById('tableInfo').textContent = 
+                                    `Showing ${showing} to ${to} of ${totalEntries} entries`;
+                                
+                                renderPagination(totalPages);
+                            }
+
+                            function renderPagination(totalPages) {
+                                const pagination = document.getElementById('pagination');
+                                pagination.innerHTML = '';
+                                
+                                if (totalPages <= 1) return;
+                                
+                                const prevLi = document.createElement('li');
+                                prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+                                prevLi.innerHTML = `<a class="page-link" href="#" onclick="changePage(${currentPage - 1}); return false;">Previous</a>`;
+                                pagination.appendChild(prevLi);
+                                
+                                for (let i = 1; i <= totalPages; i++) {
+                                    if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+                                        const li = document.createElement('li');
+                                        li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                                        li.innerHTML = `<a class="page-link" href="#" onclick="changePage(${i}); return false;">${i}</a>`;
+                                        pagination.appendChild(li);
+                                    } else if (i === currentPage - 3 || i === currentPage + 3) {
+                                        const li = document.createElement('li');
+                                        li.className = 'page-item disabled';
+                                        li.innerHTML = '<a class="page-link" href="#">...</a>';
+                                        pagination.appendChild(li);
+                                    }
+                                }
+                                
+                                const nextLi = document.createElement('li');
+                                nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+                                nextLi.innerHTML = `<a class="page-link" href="#" onclick="changePage(${currentPage + 1}); return false;">Next</a>`;
+                                pagination.appendChild(nextLi);
+                            }
+
+                            function changePage(page) {
+                                const totalPages = Math.ceil(filteredRows.length / entriesPerPage);
+                                if (page < 1 || page > totalPages) return;
+                                currentPage = page;
+                                renderTable();
+                            }
+
+                            function applyFilters() {
+                                const searchTerm = document.getElementById('searchBooks').value.toLowerCase();
+                                const genreFilter = document.getElementById('filterGenre').value;
+                                const table = document.getElementById('booksTable');
+                                const rows = Array.from(table.querySelectorAll('tbody tr'));
+                                
+                                filteredRows = rows.filter(row => {
+                                    const matchesSearch = row.dataset.id.toLowerCase().includes(searchTerm) ||
+                                                        row.dataset.title.toLowerCase().includes(searchTerm) ||
+                                                        row.dataset.author.toLowerCase().includes(searchTerm) ||
+                                                        row.dataset.genre.toLowerCase().includes(searchTerm) ||
+                                                        row.dataset.year.toLowerCase().includes(searchTerm);
+                                    
+                                    const matchesGenre = !genreFilter || row.dataset.genre === genreFilter;
+                                    
+                                    return matchesSearch && matchesGenre;
+                                });
+                                
+                                currentPage = 1;
+                                renderTable();
+                            }
+
+                            document.getElementById('searchBooks').addEventListener('input', applyFilters);
+                            document.getElementById('filterGenre').addEventListener('change', applyFilters);
+
+                            document.getElementById('sortBooks').addEventListener('change', function(e) {
+                                const sortValue = e.target.value;
+                                
+                                if (!sortValue) {
+                                    initTable();
+                                    return;
+                                }
+                                
+                                const [field, order] = sortValue.split('-');
+                                
+                                filteredRows.sort((a, b) => {
+                                    let aVal, bVal;
+                                    
+                                    if (field === 'id') {
+                                        aVal = parseInt(a.dataset.id);
+                                        bVal = parseInt(b.dataset.id);
+                                    } else if (field === 'title') {
+                                        aVal = a.dataset.title.toLowerCase();
+                                        bVal = b.dataset.title.toLowerCase();
+                                    } else if (field === 'year') {
+                                        aVal = parseInt(a.dataset.year) || 0;
+                                        bVal = parseInt(b.dataset.year) || 0;
+                                    } else if (field === 'copies') {
+                                        aVal = parseInt(a.dataset.copies) || 0;
+                                        bVal = parseInt(b.dataset.copies) || 0;
+                                    }
+                                    
+                                    if (order === 'asc') {
+                                        return aVal > bVal ? 1 : -1;
+                                    } else {
+                                        return aVal < bVal ? 1 : -1;
+                                    }
+                                });
+                                
+                                renderTable();
+                            });
+
+                            document.getElementById('entriesPerPage').addEventListener('change', function(e) {
+                                entriesPerPage = parseInt(e.target.value);
+                                currentPage = 1;
+                                renderTable();
+                            });
+
+                            initTable();
+                        </script>
                     {{else}}
                         <div class="alert alert-info text-center">
                             No books found. <a href="/books/create">Add your first book</a>
