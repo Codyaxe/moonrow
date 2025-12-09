@@ -35,11 +35,15 @@ exports.createAuthor = async (req, res) => {
     const { FirstName, LastName } = req.body;
     await Author.create({ FirstName, LastName });
     req.flash("success", "Author created successfully!");
-    res.redirect("/authors");
+    req.session.save(() => {
+      res.redirect("/authors");
+    });
   } catch (err) {
     console.log(err);
     req.flash("error", "Error creating author");
-    res.redirect("/authors/create");
+    req.session.save(() => {
+      res.redirect("/authors/create");
+    });
   }
 };
 
@@ -70,15 +74,21 @@ exports.updateAuthor = async (req, res) => {
     const author = await Author.findByPk(req.params.id);
     if (!author) {
       req.flash("error", "Author not found");
-      return res.redirect("/authors");
+      return req.session.save(() => {
+        res.redirect("/authors");
+      });
     }
     await author.update({ FirstName, LastName });
     req.flash("success", "Author updated successfully!");
-    res.redirect("/authors");
+    req.session.save(() => {
+      res.redirect("/authors");
+    });
   } catch (err) {
     console.log(err);
     req.flash("error", "Error updating author");
-    res.redirect("/authors");
+    req.session.save(() => {
+      res.redirect("/authors");
+    });
   }
 };
 
@@ -88,14 +98,20 @@ exports.deleteAuthor = async (req, res) => {
     const author = await Author.findByPk(req.params.id);
     if (!author) {
       req.flash("error", "Author not found");
-      return res.redirect("/authors");
+      return req.session.save(() => {
+        res.redirect("/authors");
+      });
     }
     await author.destroy();
     req.flash("success", "Author deleted successfully!");
-    res.redirect("/authors");
+    req.session.save(() => {
+      res.redirect("/authors");
+    });
   } catch (err) {
     console.log(err);
     req.flash("error", "Error deleting author");
-    res.redirect("/authors");
+    req.session.save(() => {
+      res.redirect("/authors");
+    });
   }
 };

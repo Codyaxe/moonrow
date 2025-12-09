@@ -26,13 +26,13 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(
   session({
     resave: true,
-    saveUninitialized: true,
+    saveUninitialized: false,
     secret: process.env.SESSION_SECRET,
-    cookie: { path: "/", httpOnly: true, maxAge: 1209600000 }, // maxAge two weeks in milliseconds, remove secure: true for local development
     store: new SequelizeStore({
       db: sequelize,
       table: "sessions",
     }),
+    cookie: { path: "/", httpOnly: true, maxAge: 1209600000 }, // maxAge two weeks in milliseconds, remove secure: true for local development
   })
 );
 
@@ -55,6 +55,14 @@ app.engine(
     helpers: {
       eq: function (a, b) {
         return a == b;
+      },
+      calculateDaysOverdue: function (borrowDate) {
+        const borrow = new Date(borrowDate);
+        const today = new Date();
+        const diffTime = Math.abs(today - borrow);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const overdueDays = diffDays - 14; // 14 days is the loan period
+        return overdueDays > 0 ? overdueDays : 0;
       },
     },
     runtimeOptions: {

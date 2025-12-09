@@ -1,49 +1,127 @@
-<main>
-	<hr class="col-12 col-md-12 mb-5">
-
-	<div class="row mt-5">
-		<div class="col-md-3 mb-4">
-			<div class="card text-center">
-				<div class="card-body">
-					<i class="fa fa-user fa-3x text-primary mb-3"></i>
-					<h5 class="card-title">Authors</h5>
-					<p class="card-text">Manage book authors</p>
-					<a href="/authors" class="btn btn-primary">View Authors</a>
-				</div>
+<!-- Hero Section -->
+<div class="container mt-5">
+	<!-- Welcome Section -->
+	<div class="row">
+		<div class="col-12">
+			<div class="text-center mb-5">
+				<h1 class="display-4 mb-3"><i class="fa fa-book text-primary"></i> Welcome to Moonrow Library</h1>
+				<p class="lead text-muted mb-4">Your gateway to knowledge and endless stories</p>
 			</div>
-		</div>
-
-		<div class="col-md-3 mb-4">
-			<div class="card text-center">
-				<div class="card-body">
-					<i class="fa fa-book fa-3x text-success mb-3"></i>
-					<h5 class="card-title">Books</h5>
-					<p class="card-text">Manage library books</p>
-					<a href="/books" class="btn btn-success">View Books</a>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-md-3 mb-4">
-			<div class="card text-center">
-				<div class="card-body">
-					<i class="fa fa-users fa-3x text-info mb-3"></i>
-					<h5 class="card-title">Borrowers</h5>
-					<p class="card-text">Manage borrowers</p>
-					<a href="/borrowers" class="btn btn-info">View Borrowers</a>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-md-3 mb-4">
-			<div class="card text-center">
-				<div class="card-body">
-					<i class="fa fa-exchange fa-3x text-warning mb-3"></i>
-					<h5 class="card-title">Loans</h5>
-					<p class="card-text">Manage book loans</p>
-					<a href="/loans" class="btn btn-warning">View Loans</a>
+			<div class="card shadow-sm border-0 mb-4">
+				<div class="card-body p-5">
+					<h3 class="text-center mb-4">Discover a World of Books</h3>
+					<p class="lead text-center mb-5">
+						Moonrow Library is more than just a collection of books—it's a community dedicated 
+						to fostering learning, imagination, and growth through the power of reading.
+					</p>
+					
+					<div class="row g-4">
+						<div class="col-md-4">
+							<div class="text-center">
+								<div class="mb-3">
+									<i class="fa fa-search fa-3x text-primary"></i>
+								</div>
+								<h5 class="fw-bold">Extensive Collection</h5>
+								<p class="text-muted">
+									Access thousands of books across all genres, from classic literature to 
+									contemporary bestsellers, academic texts to children's stories.
+								</p>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="text-center">
+								<div class="mb-3">
+									<i class="fa fa-clock-o fa-3x text-success"></i>
+								</div>
+								<h5 class="fw-bold">Easy Borrowing</h5>
+								<p class="text-muted">
+									Streamlined digital catalog and borrowing system makes it simple to find, 
+									reserve, and manage your books—all from the comfort of your home.
+								</p>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="text-center">
+								<div class="mb-3">
+									<i class="fa fa-users fa-3x text-info"></i>
+								</div>
+								<h5 class="fw-bold">Expert Support</h5>
+								<p class="text-muted">
+									Our dedicated librarians are here to help you discover new authors, 
+									find research materials, and make the most of your library experience.
+								</p>
+							</div>
+						</div>
+					</div>
+					
+					<div class="mt-5 p-4 bg-light rounded text-center">
+						<h5 class="mb-3">What You Can Expect</h5>
+						<ul class="list-unstyled mb-0">
+							<li class="mb-2"><i class="fa fa-check-circle text-success me-2"></i>Personalized book recommendations</li>
+							<li class="mb-2"><i class="fa fa-check-circle text-success me-2"></i>Flexible borrowing periods</li>
+							<li class="mb-2"><i class="fa fa-check-circle text-success me-2"></i>Regular new arrivals and updates</li>
+							<li class="mb-2"><i class="fa fa-check-circle text-success me-2"></i>Community reading events</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</main>
+
+	{{#if isLoggedIn}}
+	<!-- Quick Access Cards for Logged In Users -->
+	<div class="row mb-4">
+		<div class="col-12 mb-3">
+			<h4 class="text-center"><i class="fa fa-tasks"></i> Quick Actions</h4>
+			<p class="text-center text-muted">Manage your library resources</p>
+		</div>
+	</div>
+	<div class="d-flex flex-wrap justify-content-center gap-4 mb-5">
+		<div class="card text-center h-100" style="width: 13rem;">
+			<div class="card-body d-flex flex-column">
+				<i class="fa fa-user fa-3x text-secondary mb-3"></i>
+				<h5 class="card-title">Authors</h5>
+				<p class="card-text flex-grow-1">Manage book authors</p>
+				<a href="/authors" class="btn btn-secondary mt-auto">View Authors</a>
+			</div>
+		</div>
+
+		<div class="card text-center h-100" style="width: 13rem;">
+			<div class="card-body d-flex flex-column">
+				<i class="fa fa-book fa-3x text-success mb-3"></i>
+				<h5 class="card-title">Books</h5>
+				<p class="card-text flex-grow-1">Manage library books</p>
+				<a href="/books" class="btn btn-success mt-auto">View Books</a>
+			</div>
+		</div>
+
+		<div class="card text-center h-100" style="width: 13rem;">
+			<div class="card-body d-flex flex-column">
+				<i class="fa fa-users fa-3x text-info mb-3"></i>
+				<h5 class="card-title">Borrowers</h5>
+				<p class="card-text flex-grow-1">Manage borrowers</p>
+				<a href="/borrowers" class="btn btn-info mt-auto">View Borrowers</a>
+			</div>
+		</div>
+
+		<div class="card text-center h-100" style="width: 13rem;">
+			<div class="card-body d-flex flex-column">
+				<i class="fa fa-exchange fa-3x text-warning mb-3"></i>
+				<h5 class="card-title">Loans</h5>
+				<p class="card-text flex-grow-1">Manage book loans</p>
+				<a href="/loans" class="btn btn-warning mt-auto">View Loans</a>
+			</div>
+		</div>
+
+		<div class="card text-center h-100" style="width: 13rem;">
+			<div class="card-body d-flex flex-column">
+				<i class="fa fa-dashboard fa-3x text-primary mb-3"></i>
+				<h5 class="card-title">Dashboard</h5>
+				<p class="card-text flex-grow-1">View analytics & stats</p>
+				<a href="/dashboard" class="btn btn-primary mt-auto">Go to Dashboard</a>
+			</div>
+		</div>
+
+	</div>
+	{{/if}}
+</div>

@@ -48,11 +48,15 @@ exports.createBook = async (req, res) => {
       CopiesAvailable: CopiesAvailable || 1,
     });
     req.flash("success", "Book created successfully!");
-    res.redirect("/books");
+    req.session.save(() => {
+      res.redirect("/books");
+    });
   } catch (err) {
     console.log(err);
     req.flash("error", "Error creating book");
-    res.redirect("/books/create");
+    req.session.save(() => {
+      res.redirect("/books/create");
+    });
   }
 };
 
@@ -85,7 +89,9 @@ exports.updateBook = async (req, res) => {
     const book = await Book.findByPk(req.params.id);
     if (!book) {
       req.flash("error", "Book not found");
-      return res.redirect("/books");
+      return req.session.save(() => {
+        res.redirect("/books");
+      });
     }
     await book.update({
       Title,
@@ -95,11 +101,15 @@ exports.updateBook = async (req, res) => {
       CopiesAvailable,
     });
     req.flash("success", "Book updated successfully!");
-    res.redirect("/books");
+    req.session.save(() => {
+      res.redirect("/books");
+    });
   } catch (err) {
     console.log(err);
     req.flash("error", "Error updating book");
-    res.redirect("/books");
+    req.session.save(() => {
+      res.redirect("/books");
+    });
   }
 };
 
@@ -109,14 +119,20 @@ exports.deleteBook = async (req, res) => {
     const book = await Book.findByPk(req.params.id);
     if (!book) {
       req.flash("error", "Book not found");
-      return res.redirect("/books");
+      return req.session.save(() => {
+        res.redirect("/books");
+      });
     }
     await book.destroy();
     req.flash("success", "Book deleted successfully!");
-    res.redirect("/books");
+    req.session.save(() => {
+      res.redirect("/books");
+    });
   } catch (err) {
     console.log(err);
     req.flash("error", "Error deleting book");
-    res.redirect("/books");
+    req.session.save(() => {
+      res.redirect("/books");
+    });
   }
 };

@@ -11,19 +11,19 @@ const Borrower = sequelize.define(
       primaryKey: true,
     },
     FirstName: {
-      type: Sequelize.STRING(50),
+      type: Sequelize.STRING,
       allowNull: false,
     },
     LastName: {
-      type: Sequelize.STRING(50),
+      type: Sequelize.STRING,
       allowNull: false,
     },
     Email: {
-      type: Sequelize.STRING(100),
+      type: Sequelize.STRING,
       allowNull: true,
     },
     Phone: {
-      type: Sequelize.STRING(20),
+      type: Sequelize.STRING,
       allowNull: true,
     },
   },
