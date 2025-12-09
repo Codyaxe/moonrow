@@ -56,6 +56,14 @@ app.engine(
       eq: function (a, b) {
         return a == b;
       },
+      calculateDaysOverdue: function (borrowDate) {
+        const borrow = new Date(borrowDate);
+        const today = new Date();
+        const diffTime = Math.abs(today - borrow);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const overdueDays = diffDays - 14; // 14 days is the loan period
+        return overdueDays > 0 ? overdueDays : 0;
+      },
     },
     runtimeOptions: {
       allowProtoPropertiesByDefault: true,

@@ -1,0 +1,114 @@
+<div class="container mt-5">
+	<!-- Page Header -->
+	<div class="row mb-5">
+		<div class="col-12 text-center">
+			<h1 class="display-4 mb-3"><i class="fa fa-info-circle text-primary"></i> About Moonrow Library</h1>
+			<p class="lead text-muted">Learn more about our library and how to reach us</p>
+		</div>
+	</div>
+
+	<!-- About and Contact Section -->
+	<div class="row mb-5">
+		<div class="col-md-6 mb-4">
+			<div class="card shadow-sm border-0 h-100">
+				<div class="card-body">
+					<h3 class="card-title"><i class="fa fa-book text-primary"></i> About Our Library</h3>
+					<p class="card-text">
+						Moonrow Library is a modern library management system designed to make book borrowing 
+						and management seamless and efficient. Our collection spans multiple genres and subjects, 
+						offering something for every reader.
+					</p>
+					<p class="card-text">
+						Whether you're a student, researcher, or casual reader, Moonrow Library provides 
+						easy access to thousands of books, a user-friendly borrowing system, and dedicated 
+						support from our professional library staff.
+					</p>
+					<h5 class="mt-4 mb-3">Our Mission</h5>
+					<p class="card-text">
+						To foster a love of reading and learning by providing accessible, diverse, and 
+						quality library services to our community.
+					</p>
+					<h5 class="mt-4 mb-3">What We Offer</h5>
+					<ul class="list-unstyled">
+						<li><i class="fa fa-check text-success"></i> Extensive book collection across all genres</li>
+						<li><i class="fa fa-check text-success"></i> Easy online borrowing process</li>
+						<li><i class="fa fa-check text-success"></i> Digital catalog with advanced search</li>
+						<li><i class="fa fa-check text-success"></i> Professional and friendly library staff</li>
+						<li><i class="fa fa-check text-success"></i> Regular book recommendations and updates</li>
+						<li><i class="fa fa-check text-success"></i> Flexible borrowing periods</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6 mb-4">
+			<div class="card shadow-sm border-0 h-100">
+				<div class="card-body">
+					<h3 class="card-title"><i class="fa fa-phone text-success"></i> Contact Information</h3>
+					<p class="card-text mb-4">
+						We'd love to hear from you! Whether you have questions, need assistance, or want 
+						to provide feedback, our team is here to help.
+					</p>
+					
+					<h5 class="mt-4 mb-3"><i class="fa fa-clock-o text-info"></i> Library Hours</h5>
+					<table class="table table-borderless">
+						<tbody>
+							<tr>
+								<td><strong>Monday - Friday</strong></td>
+								<td>9:00 AM - 8:00 PM</td>
+							</tr>
+							<tr>
+								<td><strong>Saturday</strong></td>
+								<td>10:00 AM - 6:00 PM</td>
+							</tr>
+							<tr>
+								<td><strong>Sunday</strong></td>
+								<td>12:00 PM - 5:00 PM</td>
+							</tr>
+						</tbody>
+					</table>
+					
+					<hr class="my-4">
+					
+					<h5 class="mb-3"><i class="fa fa-envelope text-primary"></i> Get In Touch</h5>
+					<div class="mb-3">
+						<strong><i class="fa fa-phone text-success me-2"></i>Phone:</strong>
+						<p class="ms-4 mb-2">(555) 123-4567</p>
+					</div>
+					<div class="mb-3">
+						<strong><i class="fa fa-envelope text-info me-2"></i>Email:</strong>
+						<p class="ms-4 mb-2">info@moonrowlibrary.com</p>
+					</div>
+					<div class="mb-3">
+						<strong><i class="fa fa-map-marker text-danger me-2"></i>Address:</strong>
+						<p class="ms-4 mb-2">123 Library Street<br>Book City, BC 12345</p>
+					</div>
+					
+					<hr class="my-4">
+					
+					<h5 class="mb-3"><i class="fa fa-users text-warning"></i> Visit Us</h5>
+					<p class="card-text">
+						Stop by during our operating hours to explore our collection, get a library card, 
+						or speak with our librarians. We're located in the heart of Book City, easily 
+						accessible by public transportation.
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Call to Action -->
+	{{#unless isAuthenticated}}
+	<div class="row mb-4">
+		<div class="col-12">
+			<div class="card shadow text-center">
+				<div class="card-body py-4">
+					<h4 class="mb-3">Ready to Get Started?</h4>
+					<p class="mb-4">Join our library community today and unlock access to thousands of books!</p>
+					<a href="/login" class="btn btn-primary btn-lg me-2">Login</a>
+					<a href="/sign-up" class="btn btn-outline-primary btn-lg">Sign Up</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	{{/unless}}
+</div>

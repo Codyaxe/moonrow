@@ -23,6 +23,12 @@
 				Remember me
 			</label>
 		</div>
+		{{#if messages.error}}
+		<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			{{messages.error}}
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+		{{/if}}
 		{{#if errorMessage}}
 		<div class="alert alert-danger" role="alert">
 			{{errorMessage}}

@@ -1,0 +1,357 @@
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2><i class="fa fa-dashboard"></i> Library Dashboard</h2>
+            <p class="text-muted">Overview of library statistics and activity</p>
+        </div>
+    </div>
+
+    {{#if messages.success}}
+        <div class="d-flex alert alert-success alert-dismissible fade show">
+            <span class="flex-grow-1">{{messages.success}}</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {{/if}}
+    {{#if messages.error}}
+        <div class="d-flex alert alert-danger alert-dismissible fade show">
+            <span class="flex-grow-1">{{messages.error}}</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {{/if}}
+
+    <!-- KPI Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4 col-lg-2 mb-3">
+            <div class="card text-center shadow-sm border-0 kpi-card kpi-books">
+                <div class="card-body">
+                    <i class="fa fa-book fa-2x mb-2 text-primary"></i>
+                    <h3 class="mb-0">{{stats.totalBooks}}</h3>
+                    <p class="text-muted mb-0 small">Total Books</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-2 mb-3">
+            <div class="card text-center shadow-sm border-0 kpi-card kpi-loans">
+                <div class="card-body">
+                    <i class="fa fa-exchange fa-2x mb-2 text-warning"></i>
+                    <h3 class="mb-0">{{stats.activeLoans}}</h3>
+                    <p class="text-muted mb-0 small">Active Loans</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-2 mb-3">
+            <div class="card text-center shadow-sm border-0 kpi-card kpi-available">
+                <div class="card-body">
+                    <i class="fa fa-check-circle fa-2x mb-2 text-success"></i>
+                    <h3 class="mb-0">{{stats.availableCopies}}</h3>
+                    <p class="text-muted mb-0 small">Available Copies</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-2 mb-3">
+            <div class="card text-center shadow-sm border-0 kpi-card kpi-overdue">
+                <div class="card-body">
+                    <i class="fa fa-exclamation-triangle fa-2x mb-2 text-danger"></i>
+                    <h3 class="mb-0">{{stats.overdueLoans}}</h3>
+                    <p class="text-muted mb-0 small">Overdue Books</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-2 mb-3">
+            <div class="card text-center shadow-sm border-0 kpi-card kpi-borrowers">
+                <div class="card-body">
+                    <i class="fa fa-users fa-2x mb-2 text-info"></i>
+                    <h3 class="mb-0">{{stats.totalBorrowers}}</h3>
+                    <p class="text-muted mb-0 small">Total Borrowers</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row mb-4">
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fa fa-line-chart"></i> Loan Trends (Last 12 Months)</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="loanTrendsChart" height="80"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fa fa-pie-chart"></i> Loan Status</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="loanStatusChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fa fa-bar-chart"></i> Books by Genre</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="genreChart" height="100"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fa fa-star"></i> Most Popular Books</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="popularBooksChart" height="100"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Loans -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fa fa-clock-o"></i> Recent Loans</h5>
+                </div>
+                <div class="card-body">
+                    {{#if recentLoans.length}}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Book</th>
+                                        <th>Author</th>
+                                        <th>Borrower</th>
+                                        <th>Borrow Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each recentLoans}}
+                                    <tr>
+                                        <td>{{this.book.Title}}</td>
+                                        <td>{{this.book.author.FirstName}} {{this.book.author.LastName}}</td>
+                                        <td>{{this.borrower.FirstName}} {{this.borrower.LastName}}</td>
+                                        <td>{{this.BorrowDate}}</td>
+                                        <td>
+                                            {{#if (eq this.Status "Borrowed")}}
+                                                <span class="badge bg-warning text-dark">Borrowed</span>
+                                            {{else}}
+                                                <span class="badge bg-success">Returned</span>
+                                            {{/if}}
+                                        </td>
+                                    </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    {{else}}
+                        <p class="text-muted text-center mb-0">No recent loans</p>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overdue Loans -->
+    {{#if overdueLoansDetail.length}}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0 border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0"><i class="fa fa-exclamation-circle"></i> Overdue Loans ({{overdueLoansDetail.length}})</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Book</th>
+                                    <th>Author</th>
+                                    <th>Borrower</th>
+                                    <th>Borrow Date</th>
+                                    <th>Days Overdue</th>
+                                    <th>Contact</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each overdueLoansDetail}}
+                                <tr class="table-danger">
+                                    <td>{{this.book.Title}}</td>
+                                    <td>{{this.book.author.FirstName}} {{this.book.author.LastName}}</td>
+                                    <td>{{this.borrower.FirstName}} {{this.borrower.LastName}}</td>
+                                    <td>{{this.BorrowDate}}</td>
+                                    <td><strong class="text-danger">{{calculateDaysOverdue this.BorrowDate}}</strong></td>
+                                    <td>{{this.borrower.Email}}</td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+    // Parse chart data
+    const loanTrends = {{{chartData.loanTrends}}};
+    const booksByGenre = {{{chartData.booksByGenre}}};
+    const loanStatus = {{{chartData.loanStatus}}};
+    const popularBooks = {{{chartData.popularBooks}}};
+
+    // Loan Trends Line Chart
+    const loanTrendsCtx = document.getElementById('loanTrendsChart').getContext('2d');
+    new Chart(loanTrendsCtx, {
+        type: 'line',
+        data: {
+            labels: loanTrends.map(d => d.month),
+            datasets: [{
+                label: 'Number of Loans',
+                data: loanTrends.map(d => d.count),
+                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Books by Genre Bar Chart
+    const genreCtx = document.getElementById('genreChart').getContext('2d');
+    new Chart(genreCtx, {
+        type: 'bar',
+        data: {
+            labels: booksByGenre.map(d => d.Genre || 'Unknown'),
+            datasets: [{
+                label: 'Number of Books',
+                data: booksByGenre.map(d => d.count),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.8)',
+                    'rgba(54, 162, 235, 0.8)',
+                    'rgba(255, 206, 86, 0.8)',
+                    'rgba(75, 192, 192, 0.8)',
+                    'rgba(153, 102, 255, 0.8)',
+                    'rgba(255, 159, 64, 0.8)'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Loan Status Pie Chart
+    const statusCtx = document.getElementById('loanStatusChart').getContext('2d');
+    new Chart(statusCtx, {
+        type: 'doughnut',
+        data: {
+            labels: loanStatus.map(d => d.Status),
+            datasets: [{
+                data: loanStatus.map(d => d.count),
+                backgroundColor: [
+                    'rgba(255, 206, 86, 0.8)',
+                    'rgba(75, 192, 192, 0.8)'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true
+        }
+    });
+
+    // Popular Books Bar Chart
+    const popularCtx = document.getElementById('popularBooksChart').getContext('2d');
+    new Chart(popularCtx, {
+        type: 'bar',
+        data: {
+            labels: popularBooks.map(d => d.Title.length > 20 ? d.Title.substring(0, 20) + '...' : d.Title),
+            datasets: [{
+                label: 'Times Borrowed',
+                data: popularBooks.map(d => d.loanCount),
+                backgroundColor: 'rgba(153, 102, 255, 0.8)'
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+<style>
+    .kpi-card {
+        transition: transform 0.2s;
+        border-left: 4px solid transparent;
+    }
+    .kpi-card:hover {
+        transform: translateY(-5px);
+    }
+    .kpi-books {
+        border-left-color: #0d6efd;
+    }
+    .kpi-loans {
+        border-left-color: #ffc107;
+    }
+    .kpi-available {
+        border-left-color: #198754;
+    }
+    .kpi-overdue {
+        border-left-color: #dc3545;
+    }
+    .kpi-borrowers {
+        border-left-color: #0dcaf0;
+    }
+    .card-header {
+        border-bottom: 2px solid #f8f9fa;
+    }
+</style>
