@@ -32,18 +32,21 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="GenreIDs">Genres</label>
-                                <select class="form-control" id="GenreIDs" name="GenreIDs" multiple size="5">
+                                <label>Genres</label>
+                                <div class="border rounded p-3" style="max-height: 200px; overflow-y: auto;">
                                     {{#each genres}}
-                                        <option value="{{this.GenreID}}" 
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="GenreIDs" value="{{this.GenreID}}" id="genre{{this.GenreID}}"
                                                 {{#each ../book.genres}}
-                                                    {{#if (eq this.GenreID ../../GenreID)}}selected{{/if}}
+                                                    {{#if (eq this.GenreID ../../GenreID)}}checked{{/if}}
                                                 {{/each}}>
-                                            {{this.GenreName}}
-                                        </option>
+                                            <label class="form-check-label" for="genre{{this.GenreID}}">
+                                                {{this.GenreName}}
+                                            </label>
+                                        </div>
                                     {{/each}}
-                                </select>
-                                <small class="form-text text-muted">Hold Ctrl (Cmd on Mac) to select multiple genres</small>
+                                </div>
+                                <small class="form-text text-muted">Select multiple genres if applicable</small>
                             </div>
 
                             <div class="form-group col-md-6">

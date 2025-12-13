@@ -53,13 +53,13 @@ exports.createBook = async (req, res) => {
       PublishedYear,
       CopiesAvailable: CopiesAvailable || 1,
     });
-    
+
     // Add genres if selected
     if (GenreIDs && GenreIDs.length > 0) {
       const genreIds = Array.isArray(GenreIDs) ? GenreIDs : [GenreIDs];
       await book.setGenres(genreIds);
     }
-    
+
     req.flash("success", "Book created successfully!");
     req.session.save(() => {
       res.redirect("/books");
@@ -117,7 +117,7 @@ exports.updateBook = async (req, res) => {
       PublishedYear,
       CopiesAvailable,
     });
-    
+
     // Update genres
     if (GenreIDs && GenreIDs.length > 0) {
       const genreIds = Array.isArray(GenreIDs) ? GenreIDs : [GenreIDs];
@@ -125,7 +125,7 @@ exports.updateBook = async (req, res) => {
     } else {
       await book.setGenres([]);
     }
-    
+
     req.flash("success", "Book updated successfully!");
     req.session.save(() => {
       res.redirect("/books");
