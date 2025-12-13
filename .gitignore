@@ -1,4 +1,5 @@
 /node_modules
+/migrations
 /vendor
 npm-debug.log
 yarn-error.log

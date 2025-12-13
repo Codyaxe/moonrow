@@ -75,13 +75,21 @@
                                     <tr data-id="{{this.BookID}}" 
                                         data-title="{{this.Title}}" 
                                         data-author="{{#if this.author}}{{this.author.FirstName}} {{this.author.LastName}}{{else}}-{{/if}}"
-                                        data-genre="{{#if this.genre}}{{this.genre.GenreName}}{{else}}-{{/if}}"
+                                        data-genre="{{#if this.genres}}{{#each this.genres}}{{this.GenreName}}{{#unless @last}}, {{/unless}}{{/each}}{{else}}-{{/if}}"
                                         data-year="{{this.PublishedYear}}"
                                         data-copies="{{this.CopiesAvailable}}">
                                         <td>{{this.BookID}}</td>
                                         <td>{{this.Title}}</td>
                                         <td>{{#if this.author}}{{this.author.FirstName}} {{this.author.LastName}}{{else}}-{{/if}}</td>
-                                        <td>{{#if this.genre}}{{this.genre.GenreName}}{{else}}-{{/if}}</td>
+                                        <td>
+                                            {{#if this.genres.length}}
+                                                {{#each this.genres}}
+                                                    <span class="badge bg-primary">{{this.GenreName}}</span>{{#unless @last}} {{/unless}}
+                                                {{/each}}
+                                            {{else}}
+                                                -
+                                            {{/if}}
+                                        </td>
                                         <td>{{this.PublishedYear}}</td>
                                         <td>{{this.CopiesAvailable}}</td>
                                         <td>

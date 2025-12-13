@@ -8,7 +8,7 @@ exports.listBooks = async (req, res) => {
     const books = await Book.findAll({
       include: [
         { model: Author, as: "author" },
-        { model: Genre, as: "genre" },
+        { model: Genre, as: "genres" },
       ],
       order: [["Title", "ASC"]],
     });
@@ -45,15 +45,21 @@ exports.createBookPage = async (req, res) => {
 // Create new book
 exports.createBook = async (req, res) => {
   try {
-    const { Title, AuthorID, GenreID, PublishedYear, CopiesAvailable } =
+    const { Title, AuthorID, GenreIDs, PublishedYear, CopiesAvailable } =
       req.body;
-    await Book.create({
+    const book = await Book.create({
       Title,
       AuthorID: AuthorID || null,
-      GenreID: GenreID || null,
       PublishedYear,
       CopiesAvailable: CopiesAvailable || 1,
     });
+    
+    // Add genres if selected
+    if (GenreIDs && GenreIDs.length > 0) {
+      const genreIds = Array.isArray(GenreIDs) ? GenreIDs : [GenreIDs];
+      await book.setGenres(genreIds);
+    }
+    
     req.flash("success", "Book created successfully!");
     req.session.save(() => {
       res.redirect("/books");
@@ -70,7 +76,9 @@ exports.createBook = async (req, res) => {
 // Show edit form
 exports.editBookPage = async (req, res) => {
   try {
-    const book = await Book.findByPk(req.params.id);
+    const book = await Book.findByPk(req.params.id, {
+      include: [{ model: Genre, as: "genres" }],
+    });
     const authors = await Author.findAll({ order: [["LastName", "ASC"]] });
     const genres = await Genre.findAll({ order: [["GenreName", "ASC"]] });
     if (!book) {
@@ -94,7 +102,7 @@ exports.editBookPage = async (req, res) => {
 // Update book
 exports.updateBook = async (req, res) => {
   try {
-    const { Title, AuthorID, GenreID, PublishedYear, CopiesAvailable } =
+    const { Title, AuthorID, GenreIDs, PublishedYear, CopiesAvailable } =
       req.body;
     const book = await Book.findByPk(req.params.id);
     if (!book) {
@@ -106,10 +114,18 @@ exports.updateBook = async (req, res) => {
     await book.update({
       Title,
       AuthorID: AuthorID || null,
-      GenreID: GenreID || null,
       PublishedYear,
       CopiesAvailable,
     });
+    
+    // Update genres
+    if (GenreIDs && GenreIDs.length > 0) {
+      const genreIds = Array.isArray(GenreIDs) ? GenreIDs : [GenreIDs];
+      await book.setGenres(genreIds);
+    } else {
+      await book.setGenres([]);
+    }
+    
     req.flash("success", "Book updated successfully!");
     req.session.save(() => {
       res.redirect("/books");

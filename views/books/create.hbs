@@ -30,13 +30,13 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="GenreID">Genre</label>
-                                <select class="form-control" id="GenreID" name="GenreID">
-                                    <option value="">-- Select Genre --</option>
+                                <label for="GenreIDs">Genres</label>
+                                <select class="form-control" id="GenreIDs" name="GenreIDs" multiple size="5">
                                     {{#each genres}}
                                         <option value="{{this.GenreID}}">{{this.GenreName}}</option>
                                     {{/each}}
                                 </select>
+                                <small class="form-text text-muted">Hold Ctrl (Cmd on Mac) to select multiple genres</small>
                             </div>
 
                             <div class="form-group col-md-6">

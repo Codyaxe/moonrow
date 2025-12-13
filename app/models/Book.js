@@ -2,6 +2,7 @@ const Sequelize = require("sequelize");
 const sequelize = require("../../config/database");
 const Author = require("./Author");
 const Genre = require("./Genre");
+const BookGenre = require("./BookGenre");
 
 const Book = sequelize.define(
   "Book",
@@ -17,10 +18,6 @@ const Book = sequelize.define(
       allowNull: false,
     },
     AuthorID: {
-      type: Sequelize.INTEGER,
-      allowNull: true,
-    },
-    GenreID: {
       type: Sequelize.INTEGER,
       allowNull: true,
     },
@@ -43,7 +40,18 @@ const Book = sequelize.define(
 Book.belongsTo(Author, { foreignKey: "AuthorID", as: "author" });
 Author.hasMany(Book, { foreignKey: "AuthorID", as: "books" });
 
-Book.belongsTo(Genre, { foreignKey: "GenreID", as: "genre" });
-Genre.hasMany(Book, { foreignKey: "GenreID", as: "books" });
+// Many-to-many relationship with Genre through BookGenre
+Book.belongsToMany(Genre, {
+  through: BookGenre,
+  foreignKey: "BookID",
+  otherKey: "GenreID",
+  as: "genres",
+});
+Genre.belongsToMany(Book, {
+  through: BookGenre,
+  foreignKey: "GenreID",
+  otherKey: "BookID",
+  as: "books",
+});
 
 module.exports = Book;
