@@ -2,7 +2,7 @@ const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../../config/database");
 
 const User = sequelize.define(
-  "users",
+  "user",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -29,6 +29,7 @@ const User = sequelize.define(
     },
   },
   {
+    tableName: "users",
     timestamps: false,
     indexes: [
       // Create a unique index on email

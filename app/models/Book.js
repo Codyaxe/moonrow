@@ -4,7 +4,7 @@ const Author = require("./Author");
 const Genre = require("./Genre");
 
 const Book = sequelize.define(
-  "book",
+  "Book",
   {
     BookID: {
       type: Sequelize.INTEGER,

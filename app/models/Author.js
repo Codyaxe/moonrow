@@ -2,7 +2,7 @@ const Sequelize = require("sequelize");
 const sequelize = require("../../config/database");
 
 const Author = sequelize.define(
-  "author",
+  "Author",
   {
     AuthorID: {
       type: Sequelize.INTEGER,

@@ -2,7 +2,7 @@ const Sequelize = require("sequelize");
 const sequelize = require("../../config/database");
 
 const Borrower = sequelize.define(
-  "borrower",
+  "Borrower",
   {
     BorrowerID: {
       type: Sequelize.INTEGER,

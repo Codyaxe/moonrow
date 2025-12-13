@@ -2,7 +2,7 @@ const Sequelize = require("sequelize");
 const sequelize = require("../../config/database");
 
 const Genre = sequelize.define(
-  "genre",
+  "Genre",
   {
     GenreID: {
       type: Sequelize.INTEGER,

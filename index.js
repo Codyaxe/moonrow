@@ -16,11 +16,20 @@ const router = express.Router();
 //Loading Routes
 const webRoutes = require("./routes/web");
 const sequelize = require("./config/database");
+const Session = require("./app/models/Session");
 const errorController = require("./app/controllers/ErrorController");
 
 env.config();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
+
+// Create session store
+const sessionStore = new SequelizeStore({
+  db: sequelize,
+  model: Session,
+  checkExpirationInterval: 15 * 60 * 1000,
+  expiration: 24 * 60 * 60 * 1000,
+});
 
 // required for csurf
 app.use(
@@ -28,10 +37,7 @@ app.use(
     resave: true,
     saveUninitialized: false,
     secret: process.env.SESSION_SECRET,
-    store: new SequelizeStore({
-      db: sequelize,
-      table: "sessions",
-    }),
+    store: sessionStore,
     cookie: { path: "/", httpOnly: true, maxAge: 1209600000 }, // maxAge two weeks in milliseconds, remove secure: true for local development
   })
 );

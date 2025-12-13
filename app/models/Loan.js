@@ -4,7 +4,7 @@ const Book = require("./Book");
 const Borrower = require("./Borrower");
 
 const Loan = sequelize.define(
-  "loan",
+  "Loan",
   {
     LoanID: {
       type: Sequelize.INTEGER,
