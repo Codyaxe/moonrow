@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize");
 const sequelize = require("../../config/database");
 const Author = require("./Author");
+const Genre = require("./Genre");
 
 const Book = sequelize.define(
   "book",
@@ -19,8 +20,8 @@ const Book = sequelize.define(
       type: Sequelize.INTEGER,
       allowNull: true,
     },
-    Genre: {
-      type: Sequelize.STRING(50),
+    GenreID: {
+      type: Sequelize.INTEGER,
       allowNull: true,
     },
     PublishedYear: {
@@ -38,8 +39,11 @@ const Book = sequelize.define(
   }
 );
 
-// Define association
+// Define associations
 Book.belongsTo(Author, { foreignKey: "AuthorID", as: "author" });
 Author.hasMany(Book, { foreignKey: "AuthorID", as: "books" });
+
+Book.belongsTo(Genre, { foreignKey: "GenreID", as: "genre" });
+Genre.hasMany(Book, { foreignKey: "GenreID", as: "books" });
 
 module.exports = Book;

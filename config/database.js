@@ -2,11 +2,28 @@ const Sequelize = require("sequelize");
 const env = require("dotenv");
 env.config();
 
-const DB_HOST = process.env.DB_HOST;
+// For Deployment
+// const DB_HOST = process.env.DB_HOST;
+// const DB_PORT = process.env.DB_PORT || 3306;
+// const DB_NAME = process.env.DB_NAME;
+// const DB_USER = process.env.DB_USER;
+// const DB_PASSWORD = process.env.DB_PASSWORD;
+
+const DB_HOST = process.env.DB_HOST || "127.0.0.1";
 const DB_PORT = process.env.DB_PORT || 3306;
-const DB_NAME = process.env.DB_NAME;
-const DB_USER = process.env.DB_USER;
-const DB_PASSWORD = process.env.DB_PASSWORD;
+// Accept either DB_NAME or DB_DATABASE (compatibility)
+const DB_NAME = process.env.DB_NAME || process.env.DB_DATABASE;
+const DB_USER = process.env.DB_USER || process.env.DB_USERNAME;
+// Accept DB_PASSWORD or DB_PASS; default to empty string if not set
+const DB_PASSWORD = process.env.DB_PASSWORD || process.env.DB_PASS || "";
+
+if (!DB_NAME) {
+  throw new Error("Database name not set. Set DB_NAME or DB_DATABASE in .env");
+}
+if (!DB_USER) {
+  // allow empty password but username must be present
+  throw new Error("Database user not set. Set DB_USER or DB_USERNAME in .env");
+}
 
 const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
   dialect: "mysql",
