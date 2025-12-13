@@ -44,9 +44,10 @@ exports.dashboardPage = async (req, res) => {
 
     // Books by genre
     const booksByGenre = await sequelize.query(
-      `SELECT Genre, COUNT(*) as count
-      FROM Books
-      GROUP BY Genre
+      `SELECT g.GenreName as Genre, COUNT(*) as count
+      FROM Books b
+      LEFT JOIN Genres g ON b.GenreID = g.GenreID
+      GROUP BY g.GenreName
       ORDER BY count DESC`,
       { type: sequelize.QueryTypes.SELECT }
     );

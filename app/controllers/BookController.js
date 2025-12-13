@@ -1,11 +1,15 @@
 const Book = require("../models/Book");
 const Author = require("../models/Author");
+const Genre = require("../models/Genre");
 
 // List all books
 exports.listBooks = async (req, res) => {
   try {
     const books = await Book.findAll({
-      include: [{ model: Author, as: "author" }],
+      include: [
+        { model: Author, as: "author" },
+        { model: Genre, as: "genre" },
+      ],
       order: [["Title", "ASC"]],
     });
     res.render("books/list", {
@@ -24,9 +28,11 @@ exports.listBooks = async (req, res) => {
 exports.createBookPage = async (req, res) => {
   try {
     const authors = await Author.findAll({ order: [["LastName", "ASC"]] });
+    const genres = await Genre.findAll({ order: [["GenreName", "ASC"]] });
     res.render("books/create", {
       pageTitle: "Add New Book",
       authors: authors,
+      genres: genres,
       layout: "web_layout",
     });
   } catch (err) {
@@ -39,11 +45,12 @@ exports.createBookPage = async (req, res) => {
 // Create new book
 exports.createBook = async (req, res) => {
   try {
-    const { Title, AuthorID, Genre, PublishedYear, CopiesAvailable } = req.body;
+    const { Title, AuthorID, GenreID, PublishedYear, CopiesAvailable } =
+      req.body;
     await Book.create({
       Title,
       AuthorID: AuthorID || null,
-      Genre,
+      GenreID: GenreID || null,
       PublishedYear,
       CopiesAvailable: CopiesAvailable || 1,
     });
@@ -65,6 +72,7 @@ exports.editBookPage = async (req, res) => {
   try {
     const book = await Book.findByPk(req.params.id);
     const authors = await Author.findAll({ order: [["LastName", "ASC"]] });
+    const genres = await Genre.findAll({ order: [["GenreName", "ASC"]] });
     if (!book) {
       req.flash("error", "Book not found");
       return res.redirect("/books");
@@ -73,6 +81,7 @@ exports.editBookPage = async (req, res) => {
       pageTitle: "Edit Book",
       book: book,
       authors: authors,
+      genres: genres,
       layout: "web_layout",
     });
   } catch (err) {
@@ -85,7 +94,8 @@ exports.editBookPage = async (req, res) => {
 // Update book
 exports.updateBook = async (req, res) => {
   try {
-    const { Title, AuthorID, Genre, PublishedYear, CopiesAvailable } = req.body;
+    const { Title, AuthorID, GenreID, PublishedYear, CopiesAvailable } =
+      req.body;
     const book = await Book.findByPk(req.params.id);
     if (!book) {
       req.flash("error", "Book not found");
@@ -96,7 +106,7 @@ exports.updateBook = async (req, res) => {
     await book.update({
       Title,
       AuthorID: AuthorID || null,
-      Genre,
+      GenreID: GenreID || null,
       PublishedYear,
       CopiesAvailable,
     });

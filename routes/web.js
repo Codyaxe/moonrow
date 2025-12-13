@@ -7,6 +7,7 @@ const AuthorController = require("../app/controllers/AuthorController");
 const BookController = require("../app/controllers/BookController");
 const BorrowerController = require("../app/controllers/BorrowerController");
 const LoanController = require("../app/controllers/LoanController");
+const GenreController = require("../app/controllers/GenreController");
 const isAuth = require("../app/middlewares/isAuth");
 
 router.get("/", HomeController.homePage);
@@ -35,6 +36,14 @@ router.post("/books/create", isAuth, BookController.createBook);
 router.get("/books/edit/:id", isAuth, BookController.editBookPage);
 router.post("/books/edit/:id", isAuth, BookController.updateBook);
 router.post("/books/delete/:id", isAuth, BookController.deleteBook);
+
+// CRUD Routes for Genres
+router.get("/genres", isAuth, GenreController.listGenres);
+router.get("/genres/create", isAuth, GenreController.createGenrePage);
+router.post("/genres/create", isAuth, GenreController.createGenre);
+router.get("/genres/edit/:id", isAuth, GenreController.editGenrePage);
+router.post("/genres/edit/:id", isAuth, GenreController.updateGenre);
+router.post("/genres/delete/:id", isAuth, GenreController.deleteGenre);
 
 // CRUD Routes for Borrowers
 router.get("/borrowers", isAuth, BorrowerController.listBorrowers);
