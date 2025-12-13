@@ -220,6 +220,8 @@
                             // Sort functionality
                             document.getElementById('sortAuthors').addEventListener('change', function(e) {
                                 const sortValue = e.target.value;
+                                const table = document.getElementById('authorsTable');
+                                const tbody = table.querySelector('tbody');
                                 
                                 if (!sortValue) {
                                     initTable();
@@ -249,6 +251,10 @@
                                     }
                                 });
                                 
+                                // Reorder DOM elements
+                                filteredRows.forEach(row => tbody.appendChild(row));
+                                
+                                currentPage = 1;
                                 renderTable();
                             });
 

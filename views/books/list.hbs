@@ -251,6 +251,8 @@
 
                             document.getElementById('sortBooks').addEventListener('change', function(e) {
                                 const sortValue = e.target.value;
+                                const table = document.getElementById('booksTable');
+                                const tbody = table.querySelector('tbody');
                                 
                                 if (!sortValue) {
                                     initTable();
@@ -283,6 +285,10 @@
                                     }
                                 });
                                 
+                                // Reorder DOM elements
+                                filteredRows.forEach(row => tbody.appendChild(row));
+                                
+                                currentPage = 1;
                                 renderTable();
                             });
 
